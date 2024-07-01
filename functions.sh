@@ -98,7 +98,9 @@ update_graphic_for_incorrect_guess() {
     echo -e "$redacted_word\n\n"
     echo -e "$all_guesses\n\n"
     print_color_message red_text "game over!!"
-    sleep 2
+    echo ""
+    print_color_message blue_text "the word was $random_word"
+    sleep 5
     clear
     exit 0
   fi
