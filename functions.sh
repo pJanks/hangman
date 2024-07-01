@@ -66,20 +66,25 @@ process_guess() {
     echo -e "$redacted_word\n\n"
     echo "$all_guesses"
 
-    print_color_message blue_text "enter your guess:"
+    print_color_message blue_text "enter one letter or a complete guess:"
     read current_guess
 
-    if [[ -z "$current_guess" ]]; then
+    uppercase_current_guess=$(echo "$current_guess" | tr "[:lower:]" "[:upper:]")
+
+    if [[ -z "$uppercase_current_guess" ]]; then
       clear
       print_color_message red_text "guess can't be empty"
-    elif [[ ${#current_guess} -ne 1 ]]; then
-      clear
-      print_color_message red_text "guess can't be more than one character"
-    elif [[ ! "$current_guess" =~ [a-zA-Z] ]]; then
+    elif [[ ! "$uppercase_current_guess" =~ [a-zA-Z] ]]; then
       clear
       print_color_message red_text "guess must be a letter"
+    elif [[ ${#uppercase_current_guess} -ne 1 ]]; then
+      clear
+      if [[ $uppercase_current_guess == $uppercase_random_word ]]; then
+        handle_win_or_loss green_text "you win!!"
+      else
+        update_graphic_for_incorrect_guess
+      fi
     else
-      uppercase_current_guess=$(echo "$current_guess" | tr "[:lower:]" "[:upper:]")
       if [[ "$all_guesses" == *"$uppercase_current_guess"* ]]; then
         clear
         print_color_message red_text "that letter has already been guessed"
@@ -112,16 +117,7 @@ update_graphic_for_correct_guess() {
   redacted_word="$new_redacted_word"
   
   if [[ "${redacted_word// /}" == "$uppercase_random_word" ]]; then
-    clear
-    echo -e "${stages[$stage]}\n\n"
-    echo -e "$redacted_word\n\n"
-    echo -e "$all_guesses\n\n"
-    print_color_message green_text "you win!!"
-    echo ""
-    print_color_message blue_text "the word was $random_word"
-    sleep 5
-    clear
-    exit 0
+    handle_win_or_loss green_text "you win!!"
   else
     process_guess
   fi
@@ -132,15 +128,21 @@ update_graphic_for_incorrect_guess() {
   if [[ $stage -lt $((${#stages[@]} - 1)) ]]; then
     process_guess
   else
-    clear
-    echo -e "${stages[$stage]}\n\n"
-    echo -e "$redacted_word\n\n"
-    echo -e "$all_guesses\n\n"
-    print_color_message red_text "game over!!"
-    echo ""
-    print_color_message blue_text "the word was $random_word"
-    sleep 5
-    clear
-    exit 0
+    handle_win_or_loss red_text "game over!!"
   fi
+}
+
+handle_win_or_loss() {
+  color=$1
+  message=$2
+  clear
+  echo -e "${stages[$stage]}\n\n"
+  echo -e "$redacted_word\n\n"
+  echo -e "$all_guesses\n\n"
+  print_color_message "$color" "$message"
+  echo ""
+  print_color_message blue_text "the word was $random_word"
+  sleep 5
+  clear
+  exit 0
 }
