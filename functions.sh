@@ -1,7 +1,7 @@
 print_color_message() {
   color=$1
   message=$2
-  uppercase_message=$(echo "$message" | tr "[:lower:]" "[:upper:]")
+  uppercase_message=$(uppercase_string "$message")
   echo -e "${!color}${uppercase_message}${close_color_text}"
 }
 
@@ -18,9 +18,19 @@ evaluate_terminal_dimensions() {
 display_subjects() {
   print_color_message blue_text "select a subject:"
   for i in "${!subjects[@]}"; do
-    print_color_message yellow_text  "  $((i + 1)) ${subjects[$i]}"
+    print_color_message yellow_text  "  $(( i + 1 )) ${subjects[$i]}"
   done
   print_color_message blue_text  "enter only the number that corresponds to your choice"
+}
+
+uppercase_string() {
+  echo "$1" | tr "[:lower:]" "[:upper:]"
+}
+
+show_current_game_data() {
+  echo -e "${stages[$stage]}\n\n"
+  echo -e "$redacted_word\n\n"
+  echo -e "$all_guesses\n\n"
 }
 
 choose_subject() {
@@ -36,14 +46,15 @@ choose_subject() {
       random_word_index=$(( RANDOM % ${#selected_words[@]} ))
       random_word=${selected_words[$random_word_index]}
       word_with_spaces=$(echo "$random_word" | tr "_" " ")
-      uppercase_random_word=$(echo "$word_with_spaces" | tr "[:lower:]" "[:upper:]")
+      uppercase_random_word=$(uppercase_string "$word_with_spaces")
 
       if [[ -n $uppercase_random_word ]]; then
         clear
         print_color_message green_text "word chosen from ${subjects[$subject_index]}"
         sleep 1
+  
         redacted_word=""
-        for (( i=0; i<${#uppercase_random_word}; i++ )); do
+        for (( i = 0; i < ${#uppercase_random_word}; i++ )); do
            if [[ "${uppercase_random_word:$i:1}" == " " ]]; then
             redacted_word+="  "
           else
@@ -67,19 +78,17 @@ choose_subject() {
 process_guess() {
   clear
   while true; do
-    echo -e "${stages[$stage]}\n\n"
-    echo -e "$redacted_word\n\n"
-    echo "$all_guesses"
+    show_current_game_data
 
     print_color_message blue_text "enter one letter or a complete guess:"
     read current_guess
 
-    uppercase_current_guess=$(echo "$current_guess" | tr "[:lower:]" "[:upper:]")
+    uppercase_current_guess=$(uppercase_string "$current_guess")
 
     if [[ -z "$uppercase_current_guess" ]]; then
       clear
-      print_color_message red_text "guess can't be empty"
-    elif [[ ! "$uppercase_current_guess" =~ [a-zA-Z] ]]; then
+      print_color_message red_text "guess cannot be empty"
+    elif [[ ! "$uppercase_current_guess" =~ [A-Z] ]]; then
       clear
       print_color_message red_text "guess must be a letter"
     elif [[ ${#uppercase_current_guess} -ne 1 ]]; then
@@ -112,11 +121,11 @@ validate_guess() {
 
 update_graphic_for_correct_guess() {
   new_redacted_word=""
-  for (( i=0; i<${#uppercase_random_word}; i++ )); do
+  for (( i = 0; i < ${#uppercase_random_word}; i++ )); do
     if [[ "${uppercase_random_word:$i:1}" == "$uppercase_current_guess" ]]; then
       new_redacted_word+="$uppercase_current_guess "
     else
-      new_redacted_word+="${redacted_word:2*i:1} "
+      new_redacted_word+="${redacted_word:2 * i:1} "
     fi
   done
   redacted_word="$new_redacted_word"
@@ -130,7 +139,7 @@ update_graphic_for_correct_guess() {
 
 update_graphic_for_incorrect_guess() {
   (( stage++ ))
-  if [[ $stage -lt $((${#stages[@]} - 1)) ]]; then
+  if [[ $stage -lt $(( ${#stages[@]} - 1 )) ]]; then
     process_guess
   else
     handle_win_or_loss red_text "game over!!"
@@ -141,9 +150,7 @@ handle_win_or_loss() {
   color=$1
   message=$2
   clear
-  echo -e "${stages[$stage]}\n\n"
-  echo -e "$redacted_word\n\n"
-  echo -e "$all_guesses\n\n"
+  show_current_game_data
   print_color_message "$color" "$message"
   echo ""
   print_color_message blue_text "the solution was $word_with_spaces"
