@@ -146,7 +146,7 @@ handle_win_or_loss() {
   echo -e "$all_guesses\n\n"
   print_color_message "$color" "$message"
   echo ""
-  print_color_message blue_text "the word was $word_with_spaces"
+  print_color_message blue_text "the solution was $word_with_spaces"
   sleep 5
   clear
   exit 0
