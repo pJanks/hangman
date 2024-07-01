@@ -6,10 +6,9 @@ print_color_message() {
 }
 
 evaluate_terminal_dimensions() {
-  dimensions=$(stty size)
-  dimensions_array=($dimensions)
+  dimensions=($(stty size))
 
-  if [[ ${dimensions_array[0]} -lt 20 || ${dimensions_array[1]} -lt 60 ]]; then
+  if [[ ${dimensions[0]} -lt 20 || ${dimensions[1]} -lt 60 ]]; then
     clear
     print_color_message red_text "recommended terminal size is 20 rows by 60 columns"
     sleep 3
