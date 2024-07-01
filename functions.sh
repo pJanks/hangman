@@ -113,10 +113,13 @@ update_graphic_for_correct_guess() {
   
   if [[ "${redacted_word// /}" == "$uppercase_random_word" ]]; then
     clear
-    print_color_message blue_text "$redacted_word"
-    echo ""
+    echo -e "${stages[$stage]}\n\n"
+    echo -e "$redacted_word\n\n"
+    echo -e "$all_guesses\n\n"
     print_color_message green_text "you win!!"
-    sleep 2
+    echo ""
+    print_color_message blue_text "the word was $random_word"
+    sleep 5
     clear
     exit 0
   else
