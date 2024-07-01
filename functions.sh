@@ -35,7 +35,8 @@ choose_subject() {
       
       random_word_index=$(( RANDOM % ${#selected_words[@]} ))
       random_word=${selected_words[$random_word_index]}
-      uppercase_random_word=$(echo "$random_word" | tr "[:lower:]" "[:upper:]")
+      word_with_spaces=$(echo "$random_word" | tr "_" " ")
+      uppercase_random_word=$(echo "$word_with_spaces" | tr "[:lower:]" "[:upper:]")
 
       if [[ -n $uppercase_random_word ]]; then
         clear
@@ -43,7 +44,11 @@ choose_subject() {
         sleep 1
         redacted_word=""
         for (( i=0; i<${#uppercase_random_word}; i++ )); do
-          redacted_word+="_ "
+           if [[ "${uppercase_random_word:$i:1}" == " " ]]; then
+            redacted_word+="  "
+          else
+            redacted_word+="_ "
+          fi
         done
         break
       else
@@ -141,7 +146,7 @@ handle_win_or_loss() {
   echo -e "$all_guesses\n\n"
   print_color_message "$color" "$message"
   echo ""
-  print_color_message blue_text "the word was $random_word"
+  print_color_message blue_text "the word was $word_with_spaces"
   sleep 5
   clear
   exit 0
