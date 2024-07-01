@@ -8,6 +8,8 @@ clear
 print_color_message blue_text "welcome to hangman!!"
 sleep 1
 
+evaluate_terminal_dimensions
+
 clear
 display_subjects
 read subject_choice

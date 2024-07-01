@@ -5,6 +5,17 @@ print_color_message() {
   echo -e "${!color}${uppercase_message}${close_color_text}"
 }
 
+evaluate_terminal_dimensions() {
+  dimensions=$(stty size)
+  dimensionsArray=($dimensions)
+
+  if [[ ${dimensionsArray[0]} -lt 20 || ${dimensionsArray[1]} -lt 60 ]]; then
+    clear
+    print_color_message red_text "recommended terminal size is 20 rows by 60 columns"
+    sleep 3
+  fi
+}
+
 display_subjects() {
   print_color_message blue_text "select a subject:"
   for i in "${!subjects[@]}"; do
@@ -86,7 +97,7 @@ update_graphic_for_incorrect_guess() {
     clear
     echo -e "${stages[$stage]}\n\n"
     echo -e "$redacted_word\n\n"
-    echo -e "$all_guesses\n"
+    echo -e "$all_guesses\n\n"
     print_color_message red_text "game over!!"
     sleep 2
     clear
