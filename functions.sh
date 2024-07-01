@@ -35,11 +35,11 @@ choose_subject() {
       
       random_word_index=$(( RANDOM % ${#selected_words[@]} ))
       random_word=${selected_words[$random_word_index]}
-      uppercase_random_word=$(echo "$random_word" | tr '[:lower:]' '[:upper:]')
+      uppercase_random_word=$(echo "$random_word" | tr "[:lower:]" "[:upper:]")
 
       if [[ -n $uppercase_random_word ]]; then
         clear
-        print_color_message green_text "Word chosen from ${subjects[$subject_index]}"
+        print_color_message green_text "word chosen from ${subjects[$subject_index]}"
         sleep 1
         redacted_word=""
         for (( i=0; i<${#uppercase_random_word}; i++ )); do
@@ -48,12 +48,12 @@ choose_subject() {
         break
       else
         clear
-        print_color_message red_text "An unexpected error occurred"
+        print_color_message red_text "an unexpected error occurred"
         exit 1
       fi
     else
       clear
-      print_color_message red_text "Select a valid subject"
+      print_color_message red_text "select a valid subject"
       sleep 1
     fi
   done
@@ -79,7 +79,7 @@ process_guess() {
       clear
       print_color_message red_text "guess must be a letter"
     else
-      uppercase_current_guess=$(echo "$current_guess" | tr '[:lower:]' '[:upper:]')
+      uppercase_current_guess=$(echo "$current_guess" | tr "[:lower:]" "[:upper:]")
       if [[ "$all_guesses" == *"$uppercase_current_guess"* ]]; then
         clear
         print_color_message red_text "that letter has already been guessed"
