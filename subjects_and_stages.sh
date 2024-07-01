@@ -1,4 +1,7 @@
-subjects=("programming languages" "colors")
+subjects=(
+  "programming languages"
+  "colors"
+)
 
 words=(
   "bash php ruby javascript python basic" # programming languages
