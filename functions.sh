@@ -23,6 +23,42 @@ display_subjects() {
   print_color_message blue_text  "enter only the number that corresponds to your choice"
 }
 
+choose_subject() {
+  while true; do
+    clear
+    display_subjects
+    read subject_choice
+
+    if [[ $subject_choice -ge 1 && $subject_choice -le ${#subjects[@]} ]]; then
+      subject_index=$(( subject_choice - 1 ))
+      selected_words=(${words[$subject_index]})
+      
+      random_word_index=$(( RANDOM % ${#selected_words[@]} ))
+      random_word=${selected_words[$random_word_index]}
+      uppercase_random_word=$(echo "$random_word" | tr '[:lower:]' '[:upper:]')
+
+      if [[ -n $uppercase_random_word ]]; then
+        clear
+        print_color_message green_text "Word chosen from ${subjects[$subject_index]}"
+        sleep 1
+        redacted_word=""
+        for (( i=0; i<${#uppercase_random_word}; i++ )); do
+          redacted_word+="_ "
+        done
+        break
+      else
+        clear
+        print_color_message red_text "An unexpected error occurred"
+        exit 1
+      fi
+    else
+      clear
+      print_color_message red_text "Select a valid subject"
+      sleep 1
+    fi
+  done
+}
+
 process_guess() {
   clear
   while true; do
