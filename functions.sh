@@ -70,7 +70,7 @@ update_graphic_for_correct_guess() {
     print_color_message blue_text "$redacted_word"
     echo ""
     print_color_message green_text "you win!!"
-    sleep 1
+    sleep 2
     clear
     exit 0
   else
@@ -88,7 +88,7 @@ update_graphic_for_incorrect_guess() {
     echo -e "$redacted_word\n\n"
     echo -e "$all_guesses\n"
     print_color_message red_text "game over!!"
-    sleep 1
+    sleep 2
     clear
     exit 0
   fi
