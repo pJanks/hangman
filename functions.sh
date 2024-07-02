@@ -129,8 +129,9 @@ update_graphic_for_correct_guess() {
     fi
   done
   redacted_word="$new_redacted_word"
+  modified_redacted_word=$(echo "$redacted_word" | sed 's/  /__/g' | sed 's/ //g' | sed 's/__/ /g')
   
-  if [[ "${redacted_word// /}" == "$uppercase_random_word" ]]; then
+  if [[ "$modified_redacted_word" == "$uppercase_random_word" ]]; then
     handle_win_or_loss green_text "you win!!"
   else
     process_guess

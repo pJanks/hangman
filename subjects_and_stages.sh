@@ -5,7 +5,8 @@ subjects=(
 
 words=(
   "bash php ruby javascript python basic" # programming languages
-  "red orange yellow blue purple violet cyan aquamarine turquoise maroon goldenrod light_blue" # colors
+  # "red orange yellow blue purple violet cyan aquamarine turquoise maroon goldenrod light_blue" # colors
+  "light_blue"
 )
 
 stages=(
