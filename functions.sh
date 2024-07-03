@@ -8,9 +8,9 @@ print_color_message() {
 evaluate_terminal_dimensions() {
   dimensions=($(stty size))
 
-  if [[ ${dimensions[0]} -lt 20 || ${dimensions[1]} -lt 60 ]]; then
+  if [[ ${dimensions[0]} -lt 25 || ${dimensions[1]} -lt 60 ]]; then
     clear
-    print_color_message red_text "recommended terminal size is 20 rows by 60 columns"
+    print_color_message red_text "recommended terminal size is 25 rows by 60 columns"
     sleep 3
   fi
 }
@@ -28,6 +28,7 @@ uppercase_string() {
 }
 
 show_current_game_data() {
+  echo -e "\n$uppercase_subject\n"
   echo -e "${stages[$stage]}\n\n"
   echo -e "$redacted_word\n\n"
   echo -e "$all_guesses\n\n"
@@ -42,6 +43,7 @@ choose_subject() {
     if [[ $subject_choice -ge 1 && $subject_choice -le ${#subjects[@]} ]]; then
       subject_index=$(( subject_choice - 1 ))
       selected_words=(${words[$subject_index]})
+      uppercase_subject=$(uppercase_string ${subjects[$subject_index]})
       
       random_word_index=$(( RANDOM % ${#selected_words[@]} ))
       random_word=${selected_words[$random_word_index]}
